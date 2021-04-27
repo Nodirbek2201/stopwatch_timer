@@ -1,47 +1,59 @@
-import {useState} from 'react'
-import Timer from "./Components/Timer";
-import Secundamer from "./Components/Secundamer";
+import {useState, useEffect} from 'react'
+import Red from "./Components/Red";
+import Yellow from "./Components/Yellow";
+import Green from "./Components/Green";
+
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './style.scss'
 
+function App(){
 
-function App() {
+    const [state, setState] = useState({
+        green: false,
+        yellow: false,
+        red: true
+    })
 
-    const [status, setStatus] = useState(false)
-    const [modal, setModal] = useState(false)
-
-    function closeModal() {
-        setStatus(false)
-    }
-
-    function isSecundomer(){
-        setStatus(true)
-        setModal(true)
-    }
-
-    function isTimer(){
-        setStatus(true)
-        setModal(false)
-    }
-
-    return <div className={'container'}>
-        <div className="row justify-content-center mt-5">
-            <div className="col-md-6">
-                {
-                    !status ? <div className={'container'}>
-                        <div className="row m-5 justify-content-center">
-                            <div className="col-md-12">
-                                <h3>Click here to <button className={'btn btn-success'} onClick={isSecundomer}>Secondmer</button></h3>
-                                <h3>Click here to <button className={'btn btn-success'} onClick={isTimer}>Timer</button></h3>
-
-
-                            </div>
-                        </div>
-                    </div> : (modal ? <Secundamer closeModal={closeModal}/> : <Timer closeModal={closeModal}/>)
+    useEffect(()=>{
+            setInterval(()=>{
+                if(state.red){
+                    state.red=false
+                    state.yellow=true
+                    let a = {...state}
+                    setState(a)
                 }
+                else if(state.yellow){
+                    state.yellow=false
+                    state.green=true
+                    let a = {...state}
+                    setState(a)
+                }else {
+                    state.green=false
+                    state.red=true
+                    let a = {...state}
+                    setState(a)
+                }
+            },3000)
 
-            </div>
-        </div>
-    </div>
+
+    },[])
+
+
+
+return <div className={'container app'}>
+                <div className="row">
+                    <div className="col-md-4 offset-4 mr-5">
+                        <div className="box">
+                            <Red isTrue={state.red}/>
+                            <Yellow isTrue={state.yellow}/>
+                            <Green isTrue={state.green}/>
+                        </div>
+                    </div>
+                </div>
+</div>
+
+
+
 
 }
 
